@@ -6,27 +6,9 @@ using System.Text;
 
 namespace WSInstallerDomain.ProcessManager;
 
-public static class PowerShellManager
+public static class PowerShellScriptGenerator
 {
-
-public static void RegisterService(ServiceModel serviceModel)
-{
-    string cmd = GenerateServiceRegistrationCommand(serviceModel);
-    using (PowerShell powerShell = PowerShell.Create())
-    {
-        powerShell.AddScript(cmd);
-
-        Collection<PSObject> results = powerShell.Invoke();
-
-        if (powerShell.Streams.Error.Count > 0)
-        {
-            string errorMessage = string.Join(Environment.NewLine, powerShell.Streams.Error.Select(e => e.ToString()));
-            throw new Exception($"Error registering service: {errorMessage}");
-        }
-    }
-}
-
-    private static string GenerateServiceRegistrationCommand(ServiceModel serviceModel)
+    public static string GenerateServiceRegistrationCommand(ServiceModel serviceModel)
     {
         StringBuilder commandBuilder = new StringBuilder("New-Service -Name '");
         commandBuilder.Append(serviceModel.ServiceName);
